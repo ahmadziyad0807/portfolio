@@ -1,0 +1,33 @@
+{
+  "name": "intelligenai-monorepo",
+  "version": "1.0.0",
+  "description": "IntelGenAI - Intelligent Generation AI system with text and voice interactions",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "npm run dev --workspace=packages/frontend",
+    "dev:backend": "npm run dev --workspace=packages/backend",
+    "test": "npm run test --workspaces",
+    "test:unit": "npm run test:unit --workspaces",
+    "test:pbt": "npm run test:pbt --workspaces",
+    "lint": "npm run lint --workspaces",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:build": "docker compose build",
+    "setup": "npm run docker:up && npm run setup:ollama",
+    "setup:ollama": "node -e \"require('child_process').execSync(process.platform === 'win32' ? 'scripts\\\\setup-ollama.bat' : 'bash scripts/setup-ollama.sh', {stdio: 'inherit'})\""
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "concurrently": "^8.2.2",
+    "typescript": "^4.9.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
