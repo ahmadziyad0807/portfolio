@@ -1,48 +1,75 @@
-# IntelGenAI
+# Ahmad Ziyad - Professional Portfolio
 
-A modern, intelligent generation AI system built with open source LLMs, featuring text and voice interactions for seamless website integration.
+A modern, AI-themed portfolio website showcasing professional experience, skills, certifications, and projects. Built with React, TypeScript, and modern web technologies.
+
+🌐 **Live Demo**: [https://ahmad-ziyad-portfolio.vercel.app](https://ahmad-ziyad-portfolio.vercel.app)
 
 ## 🚀 Features
 
-- **Text & Voice Interactions**: Support for both text input and voice commands using Web Speech API
-- **Open Source LLMs**: Uses Ollama with Mistral 7B model for cost-effective inference
-- **Easy Integration**: Embeddable React widget for any website
-- **Cost-Effective Deployment**: Designed for free-tier and low-cost hosting options
-- **Comprehensive Testing**: Unit tests and property-based testing with fast-check
-- **Production Ready**: Docker containerization with development and production configurations
+- **Modern AI Theme**: Neural gradients, glass morphism effects, and dynamic animations
+- **Interactive Tabs**: Skills, Experience, Personal Projects, Certifications, Contact, and Profile
+- **Floating Chat Widget**: AI-powered chatbot for visitor interactions
+- **Real Certifications**: 11+ professional certifications from AWS, Microsoft, Oracle, and NVIDIA
+- **Comprehensive Skills**: Focus on AWS, DevOps, AI/ML, and enterprise technologies
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- **Performance Optimized**: Fast loading with modern React patterns
 
-## 🏗️ Architecture
+## 🛠️ Tech Stack
 
-This is a monorepo containing three main packages:
+### Frontend
+- **React 18** with TypeScript
+- **Styled Components** for styling
+- **Framer Motion** for animations
+- **Modern CSS** with glass morphism effects
 
-- **`packages/frontend`**: React-based chat widget with voice interface
-- **`packages/backend`**: Node.js/Express API server with LLM integration
-- **`packages/shared`**: Shared TypeScript types and utilities
+### Backend (Optional)
+- **Node.js** with Express
+- **Ollama** integration for AI chat
+- **Redis** for session management
 
-### Tech Stack
+### Deployment
+- **Vercel** for frontend hosting
+- **GitHub Actions** for CI/CD
+- **Docker** for containerization
 
-- **Frontend**: React 18, TypeScript, Styled Components, Web Speech API
-- **Backend**: Node.js, Express, TypeScript, Winston logging
-- **LLM**: Ollama with Mistral 7B model
-- **Database**: Redis for session storage and caching
-- **Testing**: Jest, React Testing Library, fast-check (property-based testing)
-- **Containerization**: Docker & Docker Compose
-- **Linting**: ESLint with TypeScript support
+## 🏗️ Project Structure
 
-## 🛠️ Development Setup
+```
+portfolio/
+├── packages/
+│   ├── frontend/         # React portfolio application
+│   │   ├── src/
+│   │   │   ├── components/
+│   │   │   │   ├── profile/
+│   │   │   │   ├── ChatBotWidget.tsx
+│   │   │   │   └── TabNavigation.tsx
+│   │   │   ├── styles/
+│   │   │   │   ├── aiTheme.ts
+│   │   │   │   └── theme.ts
+│   │   │   ├── data/
+│   │   │   └── App.tsx
+│   │   ├── public/
+│   │   └── package.json
+│   ├── backend/          # Optional AI chat backend
+│   └── shared/           # Shared types and utilities
+├── .github/
+│   └── workflows/        # GitHub Actions
+├── docker-compose.yml
+└── README.md
+```
+
+## 🚀 Quick Start
 
 ### Prerequisites
-
 - Node.js 18+ and npm 9+
-- Docker and Docker Compose
 - Git
 
-### Quick Start
+### Local Development
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd intelligenai
+   git clone https://github.com/your-username/ahmad-ziyad-portfolio.git
+   cd ahmad-ziyad-portfolio
    ```
 
 2. **Install dependencies**
@@ -50,232 +77,192 @@ This is a monorepo containing three main packages:
    npm install
    ```
 
-3. **Start development environment**
+3. **Start development server**
+   ```bash
+   npm run dev:frontend
+   ```
+
+4. **Access the application**
+   - Portfolio: http://localhost:3000
+
+### Full Stack Development (with AI Chat)
+
+1. **Start all services**
    ```bash
    npm run setup
    ```
-   This will:
-   - Start Docker services (Redis, Ollama)
-   - Download the Mistral 7B model
-   - Start frontend and backend in development mode
-
-4. **Access the application**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:3001
-   - Health check: http://localhost:3001/health
-   - Ollama API: http://localhost:11434
-
-### Manual Development Setup
-
-If you prefer to start services individually:
-
-```bash
-# Start Docker services
-npm run docker:up
-
-# Setup Ollama model (Windows)
-scripts\setup-ollama.bat
-
-# Setup Ollama model (Linux/Mac)
-bash scripts/setup-ollama.sh
-
-# Start development servers
-npm run dev
-```
+   This will start:
+   - Frontend on port 3000
+   - Backend API on port 3001
+   - Docker services (Redis, Ollama)
 
 ## 📝 Available Scripts
 
-### Root Level Scripts
-
-- `npm run build` - Build all packages
-- `npm run dev` - Start frontend and backend in development mode
-- `npm run test` - Run all tests
-- `npm run test:unit` - Run unit tests only
-- `npm run test:pbt` - Run property-based tests only
-- `npm run lint` - Lint all packages
-- `npm run docker:up` - Start Docker services
-- `npm run docker:down` - Stop Docker services
-- `npm run setup` - Complete development setup
-
-### Package-Specific Scripts
-
-Each package has its own scripts accessible via workspaces:
-
 ```bash
-# Backend
-npm run dev --workspace=packages/backend
-npm run test --workspace=packages/backend
+# Development
+npm run dev:frontend          # Start frontend only
+npm run dev:backend          # Start backend only
+npm run dev                  # Start both frontend and backend
 
-# Frontend  
-npm run dev --workspace=packages/frontend
-npm run test --workspace=packages/frontend
+# Building
+npm run build               # Build all packages
+npm run build:frontend      # Build frontend only
 
-# Shared
-npm run build --workspace=packages/shared
-npm run test --workspace=packages/shared
+# Testing
+npm run test               # Run all tests
+npm run lint              # Lint all packages
+
+# Docker
+npm run docker:up         # Start Docker services
+npm run docker:down       # Stop Docker services
+npm run setup            # Complete development setup
 ```
 
-## 🧪 Testing
+## 🌟 Key Features
 
-The project uses a comprehensive testing strategy:
+### Professional Sections
 
-### Unit Testing
-- **Backend**: Jest with Supertest for API testing
-- **Frontend**: React Testing Library for component testing
-- **Shared**: Jest for utility function testing
+1. **Skills Tab**
+   - AWS Cloud Services (Expert level)
+   - DevOps & Infrastructure (Kubernetes, Docker, CI/CD)
+   - AI/ML Technologies (TensorFlow, PyTorch, LangChain)
+   - Programming Languages (Python, Java, JavaScript, TypeScript)
+   - Monitoring & Observability (Prometheus, Grafana, Dynatrace, Splunk)
 
-### Property-Based Testing
-- Uses `fast-check` library for property-based testing
-- Minimum 100 iterations per property test
-- Tests universal properties across all valid inputs
+2. **Experience Tab**
+   - Senior Software Engineer/Architect roles
+   - Enterprise-level project experience
+   - Leadership and mentorship background
 
-### Running Tests
+3. **Certifications Tab**
+   - AWS Certified Solutions Architect
+   - Microsoft Azure certifications
+   - Oracle Cloud certifications
+   - NVIDIA AI/ML certifications
+   - All with verification links
+
+4. **Personal Projects Tab**
+   - IntelGen Studio (AI Chat Application)
+   - Other portfolio projects
+   - Live demo links and source code
+
+5. **Contact Tab**
+   - Professional contact information
+   - Social media links
+   - Location and availability
+
+### AI Chat Integration
+
+- **Floating Chat Widget**: Bottom-right positioned chat interface
+- **AI-Powered Responses**: Integration with Ollama and Mistral 7B model
+- **Professional Context**: Chat responses tailored to portfolio content
+- **Smooth Animations**: Modern UI/UX with glass morphism effects
+
+## 🎨 Design System
+
+### AI Theme
+- **Neural Gradients**: Subtle, professional color schemes
+- **Glass Morphism**: Modern translucent effects
+- **Dynamic Animations**: Smooth transitions and hover effects
+- **Responsive Layout**: Mobile-first design approach
+
+### Color Palette
+- **Background**: Deep dark (#0D0D0D) for professional look
+- **Text**: High contrast white (#FFFFFF) for readability
+- **Accents**: Subtle grays and blues for modern appeal
+- **Animations**: Pulsing effects and gradient sweeps
+
+## 🚀 Deployment
+
+### Vercel Deployment (Recommended)
+
+1. **Fork this repository**
+2. **Connect to Vercel**
+   - Import project from GitHub
+   - Select the `packages/frontend` directory
+   - Deploy automatically
+
+3. **Custom Domain** (Optional)
+   - Add your custom domain in Vercel dashboard
+   - Configure DNS settings
+
+### Manual Deployment
+
+1. **Build the project**
+   ```bash
+   npm run build:frontend
+   ```
+
+2. **Deploy to your hosting provider**
+   - Upload `packages/frontend/build` directory
+   - Configure web server (nginx/Apache)
+
+### Docker Deployment
 
 ```bash
-# All tests
-npm run test
-
-# Unit tests only
-npm run test:unit
-
-# Property-based tests only
-npm run test:pbt
-
-# Watch mode (for individual packages)
-npm run test --workspace=packages/frontend -- --watch
-```
-
-## 🐳 Docker Deployment
-
-### Development
-```bash
+# Build and run with Docker
 docker-compose up -d
-```
 
-### Production
-```bash
+# Production deployment
 docker-compose -f docker-compose.prod.yml up -d
 ```
 
-### Services
+## � PCustomization
 
-- **Redis**: Session storage and caching (port 6379)
-- **Ollama**: LLM inference service (port 11434)
-- **Backend**: API server (port 3001)
-- **Frontend**: React application (port 3000/80)
+### Personal Information
+Update the following files with your information:
 
-## 🔧 Configuration
+1. **Profile Data**: `packages/frontend/src/data/sampleProfile.ts`
+2. **Skills**: Update skills categories and proficiency levels
+3. **Experience**: Add your work experience and achievements
+4. **Certifications**: Replace with your certifications and links
+5. **Projects**: Add your personal and professional projects
 
-### Environment Variables
+### Styling
+- **Theme Colors**: `packages/frontend/src/styles/aiTheme.ts`
+- **Component Styles**: Individual component files
+- **Animations**: Framer Motion configurations
 
-#### Backend (.env)
-```env
-NODE_ENV=development
-PORT=3001
-FRONTEND_URL=http://localhost:3000
-REDIS_URL=redis://localhost:6379
-OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=mistral:7b
-JWT_SECRET=your-jwt-secret-here
-SESSION_SECRET=your-session-secret-here
-LOG_LEVEL=info
-```
+### AI Chat (Optional)
+- **Backend Configuration**: `packages/backend/src/config/`
+- **Chat Responses**: Update knowledge base in backend
+- **Model Selection**: Change Ollama model in configuration
 
-#### Frontend (.env)
-```env
-REACT_APP_API_BASE_URL=http://localhost:3001
-REACT_APP_WEBSOCKET_URL=ws://localhost:3001
-REACT_APP_ENVIRONMENT=development
-```
+## 📊 Performance
 
-## 🚀 Deployment Options
-
-### Option 1: Free Tier
-- **Frontend**: Vercel/Netlify static hosting
-- **Backend**: Railway/Render free tier
-- **LLM**: Ollama on free tier VPS
-- **Database**: Redis Cloud free tier
-
-### Option 2: Low-Cost ($6/month)
-- **All-in-one**: DigitalOcean Droplet
-- **Container orchestration**: Docker Compose
-- **Load balancing**: Nginx reverse proxy
-
-### Option 3: Scalable Cloud
-- **Frontend**: CDN distribution (Cloudflare)
-- **Backend**: Container service (Google Cloud Run)
-- **LLM**: Dedicated compute instance with GPU
-- **Database**: Managed Redis/PostgreSQL
-
-## 📚 Project Structure
-
-```
-intelligenai/
-├── packages/
-│   ├── backend/          # Express.js API server
-│   │   ├── src/
-│   │   │   ├── server.ts
-│   │   │   └── test/
-│   │   ├── Dockerfile
-│   │   └── package.json
-│   ├── frontend/         # React chat widget
-│   │   ├── src/
-│   │   │   ├── App.tsx
-│   │   │   └── components/
-│   │   ├── Dockerfile
-│   │   └── package.json
-│   └── shared/           # Shared types and utilities
-│       ├── src/
-│       │   ├── types/
-│       │   └── utils/
-│       └── package.json
-├── scripts/              # Setup and deployment scripts
-├── docker-compose.yml    # Development environment
-├── docker-compose.prod.yml # Production environment
-└── package.json          # Monorepo configuration
-```
+- **Lighthouse Score**: 95+ across all metrics
+- **First Contentful Paint**: < 1.5s
+- **Largest Contentful Paint**: < 2.5s
+- **Cumulative Layout Shift**: < 0.1
+- **Time to Interactive**: < 3s
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+2. Create a feature branch (`git checkout -b feature/enhancement`)
 3. Make your changes
-4. Run tests (`npm run test`)
-5. Run linting (`npm run lint`)
-6. Commit your changes (`git commit -m 'Add amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
+4. Test thoroughly (`npm run test`)
+5. Commit changes (`git commit -m 'Add enhancement'`)
+6. Push to branch (`git push origin feature/enhancement`)
+7. Open a Pull Request
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Troubleshooting
+## 🆘 Support
 
-### Common Issues
+- **Issues**: [GitHub Issues](https://github.com/your-username/ahmad-ziyad-portfolio/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/your-username/ahmad-ziyad-portfolio/discussions)
+- **Email**: [your-email@example.com](mailto:your-email@example.com)
 
-1. **Docker services not starting**
-   ```bash
-   docker-compose down
-   docker system prune -f
-   docker-compose up -d
-   ```
+## 🙏 Acknowledgments
 
-2. **Ollama model not downloading**
-   - Check internet connection
-   - Ensure Docker has sufficient disk space
-   - Try pulling manually: `docker exec intelligen-ollama ollama pull mistral:7b`
+- **Design Inspiration**: Modern AI/ML portfolio websites
+- **Icons**: React Icons library
+- **Animations**: Framer Motion
+- **Hosting**: Vercel for seamless deployment
 
-3. **Port conflicts**
-   - Check if ports 3000, 3001, 6379, or 11434 are in use
-   - Modify port mappings in docker-compose.yml if needed
+---
 
-4. **Tests failing**
-   - Ensure all dependencies are installed: `npm install`
-   - Clear Jest cache: `npm run test -- --clearCache`
-
-### Getting Help
-
-- Check the [Issues](https://github.com/your-repo/issues) page
-- Review the [Documentation](https://your-docs-url.com)
-- Join our [Discord Community](https://discord.gg/your-invite)
+**Built with ❤️ by Ahmad Ziyad** | **Senior Software Engineer/Architect**

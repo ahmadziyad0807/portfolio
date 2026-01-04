@@ -31,12 +31,14 @@ export interface ExperienceItem {
   duration: string;
   description: string;
   technologies?: string[];
+  client?: string;
 }
 
 export interface SkillCategory {
   category: string;
   skills: string[];
   proficiency?: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  description?: string;
 }
 
 export interface ProjectItem {

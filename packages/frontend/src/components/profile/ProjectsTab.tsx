@@ -1,8 +1,10 @@
 // ProjectsTab - Personal projects content for tab display
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 import { ExtendedProfileData, ProfileStyling } from '../../types/profile';
 import { Heading, Text, Flex } from '../../styles/styled';
+import aiTheme from '../../styles/aiTheme';
 
 interface ProjectsTabProps {
   profile: ExtendedProfileData;
@@ -27,19 +29,54 @@ const ProjectsGrid = styled.div`
   }
 `;
 
-const ProjectCard = styled.div<{ theme: ProfileStyling }>`
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
+const ProjectCard = styled(motion.div)<{ theme: ProfileStyling }>`
+  background: ${aiTheme.glass.medium};
+  backdrop-filter: ${aiTheme.glass.blur};
+  border: 1px solid ${aiTheme.glass.light};
+  border-radius: ${aiTheme.borderRadius.xl};
   padding: 1.5rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all ${aiTheme.animations.duration.normal} ${aiTheme.animations.easing.smooth};
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: ${aiTheme.gradients.neural};
+    opacity: 0.1;
+    transform: skewX(-25deg);
+    transition: left 0.7s ease;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: ${aiTheme.gradients.neural};
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+  }
   
   &:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.25);
+    background: ${aiTheme.glass.heavy};
+    border-color: ${aiTheme.colors.aiCyan}40;
     transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: ${aiTheme.shadows.aiGlow};
+    
+    &::before {
+      left: 100%;
+    }
+    
+    &::after {
+      transform: scaleY(1);
+    }
   }
 `;
 
@@ -47,34 +84,58 @@ const ProjectImage = styled.img<{ theme: ProfileStyling }>`
   width: 100%;
   height: 200px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: ${aiTheme.borderRadius.lg};
   margin-bottom: 1rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: ${aiTheme.glass.light};
+  border: 1px solid ${aiTheme.glass.border};
 `;
 
 const ImageFallback = styled.div<{ theme: ProfileStyling }>`
   width: 100%;
   height: 200px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  background: ${aiTheme.glass.light};
+  border-radius: ${aiTheme.borderRadius.lg};
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94A3B8;
+  color: ${aiTheme.colors.textSecondary};
   font-size: 1rem;
-  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border: 2px dashed ${aiTheme.glass.border};
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: ${aiTheme.gradients.neural};
+    border-radius: 50%;
+    opacity: 0.3;
+  }
 `;
 
 const SkillTag = styled.span<{ theme: ProfileStyling }>`
   display: inline-block;
-  padding: 0.25rem 0.75rem;
+  padding: 0.35rem 0.75rem;
   margin: 2px 4px 2px 0;
-  background: rgba(96, 165, 250, 0.2);
-  color: #60A5FA;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: ${aiTheme.colors.textSecondary};
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: ${aiTheme.borderRadius.md};
   font-size: 0.8rem;
   font-weight: 500;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: ${aiTheme.colors.text};
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
 `;
 
 const ProjectLink = styled.a<{ theme: ProfileStyling }>`
@@ -82,19 +143,38 @@ const ProjectLink = styled.a<{ theme: ProfileStyling }>`
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: rgba(96, 165, 250, 0.2);
-  color: #60A5FA;
+  background: ${aiTheme.gradients.neural};
+  color: ${aiTheme.colors.aiBlue};
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: ${aiTheme.borderRadius.lg};
   font-weight: 500;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(96, 165, 250, 0.3);
+  transition: all ${aiTheme.animations.duration.normal} ${aiTheme.animations.easing.smooth};
+  border: 1px solid ${aiTheme.colors.aiCyan}40;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: ${aiTheme.gradients.cyber};
+    opacity: 0.3;
+    transition: left 0.5s ease;
+  }
   
   &:hover {
-    background: rgba(96, 165, 250, 0.3);
-    color: #93C5FD;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2);
+    background: ${aiTheme.gradients.quantum};
+    color: ${aiTheme.colors.text};
+    transform: translateY(-2px);
+    box-shadow: ${aiTheme.shadows.glow};
+    border-color: ${aiTheme.colors.aiCyan}60;
+    
+    &::before {
+      left: 100%;
+    }
   }
 `;
 
@@ -103,19 +183,38 @@ const ProjectButton = styled.button<{ theme: ProfileStyling }>`
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: rgba(167, 139, 250, 0.2);
-  color: #A78BFA;
-  border: 1px solid rgba(167, 139, 250, 0.3);
-  border-radius: 8px;
+  background: ${aiTheme.gradients.neural};
+  color: ${aiTheme.colors.aiPurple};
+  border: 1px solid ${aiTheme.colors.aiPurple}40;
+  border-radius: ${aiTheme.borderRadius.lg};
   font-weight: 500;
-  transition: all 0.3s ease;
+  transition: all ${aiTheme.animations.duration.normal} ${aiTheme.animations.easing.smooth};
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: ${aiTheme.gradients.cyber};
+    opacity: 0.3;
+    transition: left 0.5s ease;
+  }
   
   &:hover {
-    background: rgba(167, 139, 250, 0.3);
-    color: #C4B5FD;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(167, 139, 250, 0.2);
+    background: ${aiTheme.gradients.quantum};
+    color: ${aiTheme.colors.text};
+    transform: translateY(-2px);
+    box-shadow: ${aiTheme.shadows.glow};
+    border-color: ${aiTheme.colors.aiPurple}60;
+    
+    &::before {
+      left: 100%;
+    }
   }
 `;
 
@@ -184,7 +283,7 @@ const ProjectsTab: React.FC<ProjectsTabProps> = ({ profile, styling }) => {
           alignItems: 'center',
           justifyContent: 'center',
           height: '100%',
-          color: '#94A3B8',
+          color: aiTheme.colors.textSecondary,
           fontSize: '1.1rem'
         }}>
           No projects information available
@@ -197,7 +296,7 @@ const ProjectsTab: React.FC<ProjectsTabProps> = ({ profile, styling }) => {
     <TabContainer>
       <Heading level={2} theme={styling} style={{
         marginBottom: '2rem',
-        color: '#E2E8F0',
+        color: aiTheme.colors.text,
         fontSize: '1.5rem',
         fontWeight: '600'
       }}>
@@ -205,8 +304,14 @@ const ProjectsTab: React.FC<ProjectsTabProps> = ({ profile, styling }) => {
       </Heading>
 
       <ProjectsGrid>
-        {profile.projects.map((project) => (
-          <ProjectCard key={project.id} theme={styling}>
+        {profile.projects.map((project, index) => (
+          <ProjectCard 
+            key={project.id} 
+            theme={styling}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+          >
             <SafeProjectImage
               src={project.image}
               alt={`${project.name} screenshot`}
@@ -215,7 +320,7 @@ const ProjectsTab: React.FC<ProjectsTabProps> = ({ profile, styling }) => {
             <Flex direction="column" gap="0.75rem" theme={styling}>
               <Flex justify="space-between" align="flex-start" theme={styling}>
                 <Heading level={3} theme={styling} style={{
-                  color: '#E2E8F0',
+                  color: aiTheme.colors.text,
                   fontSize: '1.2rem',
                   flex: 1
                 }}>
@@ -245,14 +350,14 @@ const ProjectsTab: React.FC<ProjectsTabProps> = ({ profile, styling }) => {
                 )}
               </Flex>
               <Text variant="body" theme={styling} style={{
-                color: '#CBD5E1',
+                color: aiTheme.colors.textSecondary,
                 lineHeight: '1.6'
               }}>
                 {project.description}
               </Text>
               <div style={{ marginTop: '0.5rem' }}>
                 <Text variant="caption" theme={styling} style={{
-                  color: '#94A3B8',
+                  color: aiTheme.colors.textSecondary,
                   marginBottom: '0.5rem',
                   display: 'block',
                   fontSize: '0.9rem'

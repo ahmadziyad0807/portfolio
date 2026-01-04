@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { ExtendedProfileData, ProfileStyling } from '../../types/profile';
 import { Heading, Text } from '../../styles/styled';
-import aiTheme from '../../styles/aiTheme';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface CertificationsTabProps {
   profile: ExtendedProfileData;
@@ -19,31 +19,35 @@ const TabContainer = styled.div`
 
 const CertificationsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+  
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
-  @media (min-width: 1400px) {
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-  }
 `;
 
-const CertificationCard = styled.div<{ theme: ProfileStyling }>`
-  background: ${aiTheme.glass.medium};
-  backdrop-filter: ${aiTheme.glass.blur};
-  border: 1px solid ${aiTheme.glass.light};
-  border-radius: ${aiTheme.borderRadius.lg};
+const CertificationCard = styled.div<{ theme: ProfileStyling; $currentTheme: any }>`
+  background: ${props => props.$currentTheme.glass.medium};
+  backdrop-filter: ${props => props.$currentTheme.glass.blur};
+  border: 1px solid ${props => props.$currentTheme.glass.light};
+  border-radius: ${props => props.$currentTheme.borderRadius.lg};
   padding: 1.5rem;
-  transition: all ${aiTheme.animations.duration.normal} ${aiTheme.animations.easing.smooth};
+  transition: all ${props => props.$currentTheme.animations.duration.normal} ${props => props.$currentTheme.animations.easing.smooth};
   display: flex;
+  flex-direction: column;
   align-items: center;
+  text-align: center;
   gap: 1rem;
   position: relative;
   overflow: hidden;
+  min-height: 280px;
   
   &::before {
     content: '';
@@ -52,49 +56,75 @@ const CertificationCard = styled.div<{ theme: ProfileStyling }>`
     left: 0;
     width: 4px;
     height: 100%;
-    background: ${aiTheme.gradients.neural};
+    background: ${props => props.$currentTheme.gradients.neural};
     transform: scaleY(0);
     transition: transform 0.3s ease;
   }
   
   &:hover {
-    background: ${aiTheme.glass.heavy};
-    border-color: ${aiTheme.colors.aiCyan}40;
+    background: ${props => props.$currentTheme.glass.heavy};
+    border-color: ${props => props.$currentTheme.colors.aiCyan}40;
     transform: translateY(-4px);
-    box-shadow: ${aiTheme.shadows.aiGlow};
+    box-shadow: ${props => props.$currentTheme.shadows.aiGlow};
     
     &::before {
       transform: scaleY(1);
     }
   }
+  
+  @media (max-width: 768px) {
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+    min-height: auto;
+    padding: 1.25rem;
+  }
 `;
 
 const CertificationLogo = styled.img`
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.1);
   padding: 0.75rem;
   flex-shrink: 0;
+  
+  @media (max-width: 768px) {
+    width: 80px;
+    height: 80px;
+  }
 `;
 
 const LogoFallback = styled.div`
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #94A3B8;
-  font-size: 3rem;
+  font-size: 2.5rem;
   flex-shrink: 0;
+  
+  @media (max-width: 768px) {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+  }
 `;
 
 const CertificationContent = styled.div`
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  @media (max-width: 768px) {
+    align-items: flex-start;
+  }
 `;
 
 const CertificationLink = styled.a<{ theme: ProfileStyling }>`
@@ -122,6 +152,8 @@ const DateBadge = styled.span`
 `;
 
 const CertificationsTab: React.FC<CertificationsTabProps> = ({ profile, styling }) => {
+  const { theme } = useTheme();
+  
   if (!profile.certifications || profile.certifications.length === 0) {
     return (
       <TabContainer>
@@ -143,7 +175,7 @@ const CertificationsTab: React.FC<CertificationsTabProps> = ({ profile, styling 
     <TabContainer>
       <Heading level={2} theme={styling} style={{
         marginBottom: '2rem',
-        color: '#E2E8F0',
+        color: theme.colors.text,
         fontSize: '1.5rem',
         fontWeight: '600'
       }}>
@@ -152,7 +184,7 @@ const CertificationsTab: React.FC<CertificationsTabProps> = ({ profile, styling 
 
       <CertificationsGrid>
         {profile.certifications.map((cert) => (
-          <CertificationCard key={cert.id} theme={styling}>
+          <CertificationCard key={cert.id} theme={styling} $currentTheme={theme}>
             {cert.logo ? (
               <CertificationLogo
                 src={cert.logo}
@@ -175,7 +207,7 @@ const CertificationsTab: React.FC<CertificationsTabProps> = ({ profile, styling 
 
             <CertificationContent>
               <Heading level={3} theme={styling} style={{
-                color: '#E2E8F0',
+                color: theme.colors.text,
                 fontSize: '1rem',
                 marginBottom: '0.25rem',
                 lineHeight: '1.3'
@@ -195,7 +227,7 @@ const CertificationsTab: React.FC<CertificationsTabProps> = ({ profile, styling 
                 )}
               </Heading>
               <Text variant="subtitle" theme={styling} style={{
-                color: '#94A3B8',
+                color: theme.colors.textSecondary,
                 fontSize: '0.95rem'
               }}>
                 {cert.issuer}

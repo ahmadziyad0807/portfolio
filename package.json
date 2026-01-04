@@ -1,17 +1,21 @@
 {
-  "name": "intelligenai-monorepo",
+  "name": "ahmad-ziyad-portfolio",
   "version": "1.0.0",
-  "description": "IntelGenAI - Intelligent Generation AI system with text and voice interactions",
+  "description": "Ahmad Ziyad - Professional Portfolio with AI-themed design and interactive features",
   "private": true,
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "build": "npm run build --workspaces",
+    "build:frontend": "npm run build --workspace=packages/frontend",
+    "build:backend": "npm run build --workspace=packages/backend",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:frontend": "npm run dev --workspace=packages/frontend",
     "dev:backend": "npm run dev --workspace=packages/backend",
     "test": "npm run test --workspaces",
+    "test:frontend": "npm run test --workspace=packages/frontend",
+    "test:backend": "npm run test --workspace=packages/backend",
     "test:unit": "npm run test:unit --workspaces",
     "test:pbt": "npm run test:pbt --workspaces",
     "lint": "npm run lint --workspaces",
@@ -19,7 +23,9 @@
     "docker:down": "docker compose down",
     "docker:build": "docker compose build",
     "setup": "npm run docker:up && npm run setup:ollama",
-    "setup:ollama": "node -e \"require('child_process').execSync(process.platform === 'win32' ? 'scripts\\\\setup-ollama.bat' : 'bash scripts/setup-ollama.sh', {stdio: 'inherit'})\""
+    "setup:ollama": "node -e \"require('child_process').execSync(process.platform === 'win32' ? 'scripts\\\\setup-ollama.bat' : 'bash scripts/setup-ollama.sh', {stdio: 'inherit'})\"",
+    "deploy": "npm run build:frontend && vercel --prod",
+    "deploy:preview": "npm run build:frontend && vercel"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

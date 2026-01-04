@@ -1,0 +1,23 @@
+{
+  "name": "ahmad-ziyad-portfolio",
+  "version": 2,
+  "builds": [
+    {
+      "src": "packages/frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "packages/frontend/$1"
+    }
+  ],
+  "buildCommand": "cd packages/frontend && npm run build",
+  "devCommand": "cd packages/frontend && npm start",
+  "installCommand": "npm install",
+  "outputDirectory": "packages/frontend/build"
+}

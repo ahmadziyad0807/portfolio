@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Message } from '@intelligenai/shared';
 import MessageItem from './MessageItem';
 import TypingIndicator from './TypingIndicator';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface MessageListProps {
   messages: Message[];
@@ -10,7 +11,7 @@ interface MessageListProps {
   primaryColor: string;
 }
 
-const MessageContainer = styled.div`
+const MessageContainer = styled.div<{ $theme: any }>`
   flex: 1;
   overflow-y: auto;
   padding: 10px;
@@ -25,28 +26,28 @@ const MessageContainer = styled.div`
   }
   
   &::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: ${props => props.$theme.glass.light};
     border-radius: 3px;
   }
   
   &::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
+    background: ${props => props.$theme.colors.textMuted};
     border-radius: 3px;
   }
   
   &::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+    background: ${props => props.$theme.colors.textSecondary};
   }
 `;
 
-const EmptyState = styled.div`
+const EmptyState = styled.div<{ $theme: any }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex: 1;
   text-align: center;
-  color: #666;
+  color: ${props => props.$theme.colors.textSecondary};
   padding: 20px;
   
   .icon {
@@ -59,6 +60,7 @@ const EmptyState = styled.div`
     margin: 0 0 8px 0;
     font-size: 16px;
     font-weight: 600;
+    color: ${props => props.$theme.colors.text};
   }
   
   p {
@@ -73,6 +75,7 @@ const MessageList: React.FC<MessageListProps> = ({
   isLoading = false,
   primaryColor
 }) => {
+  const { theme } = useTheme();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -93,8 +96,8 @@ const MessageList: React.FC<MessageListProps> = ({
 
   if (displayMessages.length === 0 && !isLoading) {
     return (
-      <MessageContainer ref={containerRef}>
-        <EmptyState>
+      <MessageContainer ref={containerRef} $theme={theme}>
+        <EmptyState $theme={theme}>
           <div className="icon">💬</div>
           <h3>Start a conversation</h3>
           <p>Send a message to begin chatting with the assistant.</p>
@@ -104,7 +107,7 @@ const MessageList: React.FC<MessageListProps> = ({
   }
 
   return (
-    <MessageContainer ref={containerRef} role="log" aria-label="Chat messages">
+    <MessageContainer ref={containerRef} role="log" aria-label="Chat messages" $theme={theme}>
       {displayMessages.map((message) => (
         <MessageItem
           key={message.id}

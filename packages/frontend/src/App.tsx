@@ -1,21 +1,22 @@
 import { useState, useEffect } from 'react';
 import TabNavigation from './components/TabNavigation';
 import ChatBotWidget from './components/ChatBotWidget';
+import ThemeDropdown from './components/ThemeDropdown';
 
-import ProfileOverview from './components/profile/ProfileOverview';
+import ProfileSkillsTab from './components/profile/ProfileSkillsTab';
 import ExperienceTab from './components/profile/ExperienceTab';
-import SkillsTab from './components/profile/SkillsTab';
 import ProjectsTab from './components/profile/ProjectsTab';
 import CertificationsTab from './components/profile/CertificationsTab';
 import ContactTab from './components/profile/ContactTab';
 import { sampleProfileData, sampleExtendedProfileData } from './data/sampleProfile';
 import { initializePerformanceOptimizations, cleanupPerformanceOptimizations } from './utils/performanceInit';
 import { defaultTheme } from './styles/theme';
-import aiTheme from './styles/aiTheme';
 import { ExtendedProfileData } from './types/profile';
 import InteractiveBackground from './components/InteractiveBackground';
+import { useTheme } from './contexts/ThemeContext';
 
 function App() {
+  const { theme } = useTheme();
   // Extended profile data state
   const [extendedProfile, setExtendedProfile] = useState<ExtendedProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -55,24 +56,14 @@ function App() {
 
   const tabs = [
     {
-      id: 'skills',
-      label: 'Skills',
-      content: !isLoading && extendedProfile ? (
-        <SkillsTab
-          profile={extendedProfile}
+      id: 'profile-skills',
+      label: 'Profile & Skills',
+      content: (
+        <ProfileSkillsTab
+          profile={sampleProfileData}
+          extendedProfile={extendedProfile}
           styling={defaultTheme}
         />
-      ) : (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          color: '#94A3B8',
-          fontSize: '1.1rem'
-        }}>
-          Loading skills information...
-        </div>
       )
     },
     {
@@ -152,21 +143,11 @@ function App() {
           alignItems: 'center',
           justifyContent: 'center',
           height: '100%',
-          color: aiTheme.colors.textSecondary,
+          color: theme.colors.textSecondary,
           fontSize: '1.1rem'
         }}>
           Loading contact information...
         </div>
-      )
-    },
-    {
-      id: 'profile',
-      label: 'Profile',
-      content: (
-        <ProfileOverview
-          profile={sampleProfileData}
-          styling={defaultTheme}
-        />
       )
     }
   ];
@@ -193,7 +174,7 @@ function App() {
         }
         
         @keyframes pulse-border {
-          0%, 100% { border-color: ${aiTheme.glass.border}; }
+          0%, 100% { border-color: ${theme.glass.border}; }
           50% { border-color: rgba(255, 255, 255, 0.2); }
         }
         
@@ -204,9 +185,9 @@ function App() {
         body {
           margin: 0;
           overflow: hidden;
-          background: ${aiTheme.colors.background};
-          color: ${aiTheme.colors.text};
-          font-family: ${aiTheme.typography.fontFamily.primary};
+          background: ${theme.colors.background};
+          color: ${theme.colors.text};
+          font-family: ${theme.typography.fontFamily.primary};
         }
       `}</style>
 
@@ -221,24 +202,25 @@ function App() {
         position: 'relative',
         zIndex: 1
       }}>
-        {/* Header Section - Simple heading/label */}
+        {/* Header Section - Simple heading/label with theme dropdown */}
         <div style={{
           height: '10vh',
           minHeight: '60px',
           maxHeight: '80px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'space-between',
           padding: '0 1rem'
         }}>
           <div style={{
-            textAlign: 'center'
+            textAlign: 'center',
+            flex: 1
           }}>
             <h1 style={{
               fontSize: '2.5rem',
               fontWeight: '700',
               margin: 0,
-              color: '#FFFFFF',
+              color: theme.colors.text,
               letterSpacing: '-0.02em',
               textShadow: '0 2px 10px rgba(0,0,0,0.5)'
             }}>
@@ -246,13 +228,22 @@ function App() {
             </h1>
             <p style={{
               fontSize: '1rem',
-              color: aiTheme.colors.textSecondary,
+              color: theme.colors.textSecondary,
               margin: '0.25rem 0 0 0',
               fontWeight: '500',
-              textShadow: `0 0 10px ${aiTheme.colors.aiBlue}30`
+              textShadow: `0 0 10px ${theme.colors.aiBlue}30`
             }}>
               {sampleProfileData.title}
             </p>
+          </div>
+          
+          {/* Theme Dropdown */}
+          <div style={{
+            position: 'absolute',
+            top: '1rem',
+            right: '1rem'
+          }}>
+            <ThemeDropdown />
           </div>
         </div>
 
@@ -266,11 +257,11 @@ function App() {
           padding: '0 0.5rem 0.5rem 0.5rem'
         }}>
           <div style={{
-            background: aiTheme.glass.medium,
-            backdropFilter: aiTheme.glass.blur,
-            borderRadius: aiTheme.borderRadius.xl,
-            border: `1px solid ${aiTheme.glass.light}`,
-            boxShadow: aiTheme.shadows.elevation,
+            background: theme.glass.medium,
+            backdropFilter: theme.glass.blur,
+            borderRadius: theme.borderRadius.xl,
+            border: `1px solid ${theme.glass.light}`,
+            boxShadow: theme.shadows.elevation,
             height: '100%',
             overflow: 'hidden',
             display: 'flex',
@@ -279,7 +270,7 @@ function App() {
           }}>
             <TabNavigation
               tabs={tabs}
-              defaultActiveTab="skills"
+              defaultActiveTab="profile-skills"
               onTabChange={handleTabChange}
             />
           </div>

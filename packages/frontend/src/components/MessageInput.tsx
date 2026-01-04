@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import VoiceInterface from './VoiceInterface';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface MessageInputProps {
   onSendMessage: (message: string) => void;
@@ -11,28 +12,28 @@ interface MessageInputProps {
   voiceEnabled?: boolean;
 }
 
-const InputContainer = styled.div`
+const InputContainer = styled.div<{ $theme: any }>`
   padding: 15px;
-  border-top: 1px solid #eee;
-  background-color: #fff;
+  border-top: 1px solid ${props => props.$theme.glass.border};
+  background-color: ${props => props.$theme.colors.surface};
 `;
 
-const InputWrapper = styled.div<{ $primaryColor: string; $isFocused: boolean }>`
+const InputWrapper = styled.div<{ $primaryColor: string; $isFocused: boolean; $theme: any }>`
   display: flex;
   align-items: flex-end;
   gap: 8px;
   padding: 8px 12px;
-  border: 2px solid ${props => props.$isFocused ? props.$primaryColor : '#e1e5e9'};
+  border: 2px solid ${props => props.$isFocused ? props.$theme.colors.aiBlue : props.$theme.glass.border};
   border-radius: 20px;
-  background-color: #fff;
+  background-color: ${props => props.$theme.glass.light};
   transition: border-color 0.2s ease;
   
   &:hover {
-    border-color: ${props => props.$isFocused ? props.$primaryColor : '#c1c7cd'};
+    border-color: ${props => props.$isFocused ? props.$theme.colors.aiBlue : props.$theme.colors.aiCyan}40;
   }
 `;
 
-const TextArea = styled.textarea`
+const TextArea = styled.textarea<{ $theme: any }>`
   flex: 1;
   border: none;
   outline: none;
@@ -42,16 +43,17 @@ const TextArea = styled.textarea`
   line-height: 1.4;
   padding: 4px 0;
   background: transparent;
+  color: ${props => props.$theme.colors.text};
   min-height: 20px;
   max-height: 100px;
   overflow-y: auto;
   
   &::placeholder {
-    color: #999;
+    color: ${props => props.$theme.colors.textMuted};
   }
   
   &:disabled {
-    color: #999;
+    color: ${props => props.$theme.colors.textMuted};
     cursor: not-allowed;
   }
   
@@ -65,18 +67,18 @@ const TextArea = styled.textarea`
   }
   
   &::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
+    background: ${props => props.$theme.colors.textMuted};
     border-radius: 2px;
   }
 `;
 
-const SendButton = styled.button<{ $primaryColor: string; $canSend: boolean }>`
+const SendButton = styled.button<{ $primaryColor: string; $canSend: boolean; $theme: any }>`
   width: 32px;
   height: 32px;
   border: none;
   border-radius: 50%;
-  background-color: ${props => props.$canSend ? props.$primaryColor : '#e1e5e9'};
-  color: ${props => props.$canSend ? 'white' : '#999'};
+  background-color: ${props => props.$canSend ? props.$theme.colors.aiBlue : props.$theme.glass.border};
+  color: ${props => props.$canSend ? 'white' : props.$theme.colors.textMuted};
   cursor: ${props => props.$canSend ? 'pointer' : 'not-allowed'};
   display: flex;
   align-items: center;
@@ -87,14 +89,14 @@ const SendButton = styled.button<{ $primaryColor: string; $canSend: boolean }>`
   
   &:hover {
     ${props => props.$canSend && `
-      background-color: ${props.$primaryColor};
+      background-color: ${props.$theme.colors.aiBlue};
       opacity: 0.9;
       transform: scale(1.05);
     `}
   }
   
   &:focus {
-    outline: 2px solid ${props => props.$primaryColor};
+    outline: 2px solid ${props => props.$theme.colors.aiBlue};
     outline-offset: 2px;
   }
   
@@ -104,19 +106,19 @@ const SendButton = styled.button<{ $primaryColor: string; $canSend: boolean }>`
   }
 `;
 
-const CharacterCount = styled.div<{ $isNearLimit: boolean; $isOverLimit: boolean }>`
+const CharacterCount = styled.div<{ $isNearLimit: boolean; $isOverLimit: boolean; $theme: any }>`
   font-size: 11px;
   color: ${props => {
     if (props.$isOverLimit) return '#dc3545';
     if (props.$isNearLimit) return '#ffc107';
-    return '#999';
+    return props.$theme.colors.textMuted;
   }};
   text-align: right;
   margin-top: 4px;
   padding: 0 4px;
 `;
 
-const ValidationMessage = styled.div`
+const ValidationMessage = styled.div<{ $theme: any }>`
   font-size: 12px;
   color: #dc3545;
   margin-top: 4px;
@@ -131,6 +133,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   maxLength = 1000,
   voiceEnabled = false
 }) => {
+  const { theme } = useTheme();
   const [message, setMessage] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [validationError, setValidationError] = useState('');
@@ -222,8 +225,8 @@ const MessageInput: React.FC<MessageInputProps> = ({
   const isOverLimit = characterCount > maxLength;
 
   return (
-    <InputContainer>
-      <InputWrapper $primaryColor={primaryColor} $isFocused={isFocused}>
+    <InputContainer $theme={theme}>
+      <InputWrapper $primaryColor={primaryColor} $isFocused={isFocused} $theme={theme}>
         <TextArea
           ref={textareaRef}
           value={message}
@@ -237,6 +240,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
           rows={1}
           aria-label="Type your message"
           aria-describedby={validationError ? 'input-error' : undefined}
+          $theme={theme}
         />
         
         {voiceEnabled && (
@@ -254,6 +258,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
           disabled={!canSend}
           $primaryColor={primaryColor}
           $canSend={canSend}
+          $theme={theme}
           aria-label="Send message"
           title={canSend ? 'Send message (Enter)' : 'Enter a message to send'}
         >
@@ -265,13 +270,14 @@ const MessageInput: React.FC<MessageInputProps> = ({
         <CharacterCount 
           $isNearLimit={isNearLimit} 
           $isOverLimit={isOverLimit}
+          $theme={theme}
         >
           {characterCount}/{maxLength}
         </CharacterCount>
       )}
       
       {validationError && (
-        <ValidationMessage id="input-error" role="alert">
+        <ValidationMessage id="input-error" role="alert" $theme={theme}>
           {validationError}
         </ValidationMessage>
       )}

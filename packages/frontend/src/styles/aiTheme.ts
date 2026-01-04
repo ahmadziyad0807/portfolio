@@ -24,18 +24,18 @@ export const aiTheme = {
     textMuted: '#525252',  // Neutral 600
 
     // Minimalistic accent colors
-    aiBlue: '#FFFFFF',
-    aiPurple: '#E5E7EB',
-    aiCyan: '#D1D5DB',
-    aiGreen: '#F9FAFB',
-    aiPink: '#FFFFFF',
-    aiOrange: '#A3A3A3',
+    aiBlue: '#3B82F6',
+    aiPurple: '#8B5CF6',
+    aiCyan: '#06B6D4',
+    aiGreen: '#10B981',
+    aiPink: '#EC4899',
+    aiOrange: '#F97316',
 
     // Status colors
-    success: '#FFFFFF',
-    warning: '#D1D5DB',
-    error: '#FFFFFF',
-    info: '#E5E7EB',
+    success: '#10B981',
+    warning: '#F59E0B',
+    error: '#EF4444',
+    info: '#3B82F6',
   },
 
   // Minimalist glass effects - subtle borders, less blur

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Message } from '@intelligenai/shared';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface MessageItemProps {
   message: Message;
@@ -13,7 +14,7 @@ const MessageWrapper = styled.div<{ $isUser: boolean }>`
   margin-bottom: 4px;
 `;
 
-const MessageBubble = styled.div<{ $isUser: boolean; $primaryColor: string }>`
+const MessageBubble = styled.div<{ $isUser: boolean; $primaryColor: string; $theme: any }>`
   max-width: 80%;
   padding: 12px 16px;
   border-radius: 18px;
@@ -21,12 +22,13 @@ const MessageBubble = styled.div<{ $isUser: boolean; $primaryColor: string }>`
   position: relative;
   
   ${props => props.$isUser ? `
-    background-color: ${props.$primaryColor};
+    background-color: ${props.$theme.colors.aiBlue};
     color: white;
     border-bottom-right-radius: 4px;
   ` : `
-    background-color: #f1f3f5;
-    color: #333;
+    background-color: ${props.$theme.glass.medium};
+    color: ${props.$theme.colors.text};
+    border: 1px solid ${props.$theme.glass.border};
     border-bottom-left-radius: 4px;
   `}
   
@@ -39,43 +41,46 @@ const MessageBubble = styled.div<{ $isUser: boolean; $primaryColor: string }>`
   }
 `;
 
-const MessageInfo = styled.div<{ $isUser: boolean }>`
+const MessageInfo = styled.div<{ $isUser: boolean; $theme: any }>`
   display: flex;
   align-items: center;
   gap: 8px;
   margin-top: 4px;
   font-size: 11px;
-  color: #666;
+  color: ${props => props.$theme.colors.textSecondary};
   justify-content: ${props => props.$isUser ? 'flex-end' : 'flex-start'};
 `;
 
-const SenderLabel = styled.span<{ $primaryColor: string }>`
+const SenderLabel = styled.span<{ $primaryColor: string; $theme: any }>`
   font-weight: 600;
-  color: ${props => props.$primaryColor};
+  color: ${props => props.$theme.colors.aiBlue};
 `;
 
-const Timestamp = styled.span`
-  color: #999;
+const Timestamp = styled.span<{ $theme: any }>`
+  color: ${props => props.$theme.colors.textMuted};
 `;
 
-const MetadataInfo = styled.div`
+const MetadataInfo = styled.div<{ $theme: any }>`
   font-size: 10px;
-  color: #888;
+  color: ${props => props.$theme.colors.textMuted};
   margin-top: 2px;
 `;
 
-const SystemMessage = styled.div`
+const SystemMessage = styled.div<{ $theme: any }>`
   text-align: center;
   padding: 8px 16px;
   margin: 8px 0;
-  background-color: #f8f9fa;
+  background-color: ${props => props.$theme.glass.light};
+  border: 1px solid ${props => props.$theme.glass.border};
   border-radius: 12px;
   font-size: 12px;
-  color: #666;
+  color: ${props => props.$theme.colors.textSecondary};
   font-style: italic;
 `;
 
 const MessageItem: React.FC<MessageItemProps> = ({ message, primaryColor }) => {
+  const { theme } = useTheme();
+  
   const formatTimestamp = (timestamp: Date) => {
     const now = new Date();
     const messageTime = new Date(timestamp);
@@ -109,7 +114,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, primaryColor }) => {
   // Handle system messages differently
   if (message.type === 'system') {
     return (
-      <SystemMessage role="status" aria-label={`System message: ${message.content}`}>
+      <SystemMessage $theme={theme} role="status" aria-label={`System message: ${message.content}`}>
         {message.content}
       </SystemMessage>
     );
@@ -120,21 +125,21 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, primaryColor }) => {
   return (
     <div role="article" aria-label={`Message from ${getSenderLabel(message.type)}`}>
       <MessageWrapper $isUser={isUser}>
-        <MessageBubble $isUser={isUser} $primaryColor={primaryColor}>
+        <MessageBubble $isUser={isUser} $primaryColor={primaryColor} $theme={theme}>
           <div className="content">{message.content}</div>
         </MessageBubble>
       </MessageWrapper>
 
-      <MessageInfo $isUser={isUser}>
-        <SenderLabel $primaryColor={primaryColor}>
+      <MessageInfo $isUser={isUser} $theme={theme}>
+        <SenderLabel $primaryColor={primaryColor} $theme={theme}>
           {getSenderLabel(message.type)}
         </SenderLabel>
-        <Timestamp>
+        <Timestamp $theme={theme}>
           {formatTimestamp(message.timestamp)}
         </Timestamp>
 
         {message.metadata?.processingTime && (
-          <MetadataInfo>
+          <MetadataInfo $theme={theme}>
             ({message.metadata.processingTime}ms)
           </MetadataInfo>
         )}

@@ -1,8 +1,10 @@
 // ContactTab - Contact information content for tab display
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ExtendedProfileData, ProfileStyling } from '../../types/profile';
 import { Heading, Text } from '../../styles/styled';
+import aiTheme from '../../styles/aiTheme';
 
 interface ContactTabProps {
   profile: ExtendedProfileData;
@@ -28,18 +30,37 @@ const ContactGrid = styled.div`
 `;
 
 const ContactCard = styled.div<{ theme: ProfileStyling }>`
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
+  background: ${aiTheme.glass.medium};
+  backdrop-filter: ${aiTheme.glass.blur};
+  border: 1px solid ${aiTheme.glass.light};
+  border-radius: ${aiTheme.borderRadius.xl};
   padding: 1.5rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all ${aiTheme.animations.duration.normal} ${aiTheme.animations.easing.smooth};
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: ${aiTheme.gradients.neural};
+    opacity: 0.1;
+    transform: skewX(-25deg);
+    transition: left 0.7s ease;
+  }
   
   &:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.25);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    background: ${aiTheme.glass.heavy};
+    border-color: ${aiTheme.colors.aiCyan}40;
+    transform: translateY(-4px);
+    box-shadow: ${aiTheme.shadows.aiGlow};
+    
+    &::before {
+      left: 100%;
+    }
   }
 `;
 
@@ -48,15 +69,34 @@ const ContactItem = styled.div<{ theme: ProfileStyling }>`
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  background: ${aiTheme.glass.light};
+  border: 1px solid ${aiTheme.glass.border};
+  border-radius: ${aiTheme.borderRadius.lg};
   margin-bottom: 1rem;
-  transition: all 0.3s ease;
+  transition: all ${aiTheme.animations.duration.normal} ${aiTheme.animations.easing.smooth};
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: ${aiTheme.gradients.neural};
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+  }
   
   &:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: ${aiTheme.glass.medium};
+    border-color: ${aiTheme.colors.aiCyan}30;
+    transform: translateX(4px);
+    
+    &::before {
+      transform: scaleY(1);
+    }
   }
   
   &:last-child {
@@ -64,49 +104,211 @@ const ContactItem = styled.div<{ theme: ProfileStyling }>`
   }
 `;
 
-const ContactIcon = styled.div`
-  font-size: 1.5rem;
-  width: 40px;
-  height: 40px;
+const LocationContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+`;
+
+const MapButton = styled.button`
+  background: ${aiTheme.gradients.neural};
+  border: 1px solid ${aiTheme.colors.aiCyan}40;
+  border-radius: ${aiTheme.borderRadius.md};
+  padding: 0.75rem;
+  color: ${aiTheme.colors.aiBlue};
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all ${aiTheme.animations.duration.normal} ${aiTheme.animations.easing.smooth};
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(96, 165, 250, 0.2);
-  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: ${aiTheme.gradients.cyber};
+    opacity: 0.3;
+    transition: left 0.5s ease;
+  }
+  
+  &:hover {
+    background: ${aiTheme.gradients.quantum};
+    border-color: ${aiTheme.colors.aiCyan}60;
+    color: ${aiTheme.colors.text};
+    transform: scale(1.05);
+    box-shadow: ${aiTheme.shadows.glow};
+    
+    &::before {
+      left: 100%;
+    }
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+`;
+
+const MapPopup = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+`;
+
+const MapContainer = styled(motion.div)`
+  background: ${aiTheme.colors.background};
+  border: 1px solid ${aiTheme.colors.aiCyan}40;
+  border-radius: ${aiTheme.borderRadius.xl};
+  padding: 1.5rem;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 800px;
+  height: 600px;
+  position: relative;
+  box-shadow: ${aiTheme.shadows.floating};
+`;
+
+const MapHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+`;
+
+const MapTitle = styled.h3`
+  color: ${aiTheme.colors.text};
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+`;
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  color: ${aiTheme.colors.textSecondary};
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: ${aiTheme.colors.text};
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const MapFrame = styled.iframe`
+  width: 100%;
+  height: calc(100% - 80px);
+  border: none;
+  border-radius: ${aiTheme.borderRadius.lg};
+`;
+
+const ContactIcon = styled.div`
+  font-size: 1.5rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${aiTheme.gradients.neural};
+  border-radius: ${aiTheme.borderRadius.lg};
   flex-shrink: 0;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: ${aiTheme.gradients.quantum};
+    border-radius: ${aiTheme.borderRadius.lg};
+    z-index: -1;
+    opacity: 0.6;
+  }
 `;
 
 const ContactLink = styled.a<{ theme: ProfileStyling }>`
-  color: #60A5FA;
+  color: ${aiTheme.colors.aiBlue};
   text-decoration: none;
   font-weight: 500;
+  transition: all ${aiTheme.animations.duration.fast} ease;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: ${aiTheme.gradients.neural};
+    transition: width 0.3s ease;
+  }
   
   &:hover {
-    color: #93C5FD;
-    text-decoration: underline;
+    color: ${aiTheme.colors.text};
+    text-shadow: 0 0 8px ${aiTheme.colors.aiCyan}50;
+    
+    &::after {
+      width: 100%;
+    }
   }
 `;
 
 const SectionTitle = styled(Heading)<{ theme: ProfileStyling }>`
-  color: #E2E8F0;
+  color: ${aiTheme.colors.text};
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-weight: 600;
   
   &::before {
     content: '';
-    width: 3px;
+    width: 4px;
     height: 1.2rem;
-    background: linear-gradient(135deg, #60A5FA 0%, #A78BFA 100%);
+    background: ${aiTheme.gradients.neural};
     border-radius: 2px;
   }
 `;
 
 const ContactTab: React.FC<ContactTabProps> = ({ profile, styling }) => {
+  const [showMap, setShowMap] = useState(false);
   const hasContactInfo = profile.contact?.email || profile.contact?.phone || profile.contact?.location;
   const hasSocialInfo = profile.social?.website || profile.social?.linkedin || profile.social?.github;
+
+  // Google Maps embed URL for Charlotte, NC, USA
+  const mapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d208012.13056832216!2d-80.84312995!3d35.227085!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88541fc4fc381a81%3A0x884650e6bf43d164!2sCharlotte%2C%20NC!5e0!3m2!1sen!2sus!4v1640000000000!5m2!1sen!2sus";
+
+  const handleMapClick = () => {
+    setShowMap(true);
+  };
+
+  const handleCloseMap = () => {
+    setShowMap(false);
+  };
 
   if (!hasContactInfo && !hasSocialInfo) {
     return (
@@ -129,7 +331,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ profile, styling }) => {
     <TabContainer>
       <Heading level={2} theme={styling} style={{ 
         marginBottom: '2rem', 
-        color: '#E2E8F0',
+        color: aiTheme.colors.text,
         fontSize: '1.5rem',
         fontWeight: '600'
       }}>
@@ -171,7 +373,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ profile, styling }) => {
                 <ContactIcon>📱</ContactIcon>
                 <div>
                   <Text variant="caption" theme={styling} style={{ 
-                    color: '#94A3B8',
+                    color: aiTheme.colors.textSecondary,
                     fontSize: '0.8rem',
                     display: 'block',
                     marginBottom: '0.25rem'
@@ -191,22 +393,31 @@ const ContactTab: React.FC<ContactTabProps> = ({ profile, styling }) => {
             {profile.contact?.location && (
               <ContactItem theme={styling}>
                 <ContactIcon>📍</ContactIcon>
-                <div>
-                  <Text variant="caption" theme={styling} style={{ 
-                    color: '#94A3B8',
-                    fontSize: '0.8rem',
-                    display: 'block',
-                    marginBottom: '0.25rem'
-                  }}>
-                    Location
-                  </Text>
-                  <Text variant="body" theme={styling} style={{ 
-                    color: '#E2E8F0',
-                    fontWeight: '500'
-                  }}>
-                    {profile.contact.location}
-                  </Text>
-                </div>
+                <LocationContainer>
+                  <div style={{ flex: 1 }}>
+                    <Text variant="caption" theme={styling} style={{ 
+                      color: aiTheme.colors.textSecondary,
+                      fontSize: '0.8rem',
+                      display: 'block',
+                      marginBottom: '0.25rem'
+                    }}>
+                      Location
+                    </Text>
+                    <Text variant="body" theme={styling} style={{ 
+                      color: aiTheme.colors.text,
+                      fontWeight: '500'
+                    }}>
+                      {profile.contact.location}
+                    </Text>
+                  </div>
+                  <MapButton
+                    onClick={handleMapClick}
+                    title="View on Google Maps"
+                    aria-label="View location on Google Maps"
+                  >
+                    🗺️
+                  </MapButton>
+                </LocationContainer>
               </ContactItem>
             )}
           </ContactCard>
@@ -224,7 +435,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ profile, styling }) => {
                 <ContactIcon>🌐</ContactIcon>
                 <div>
                   <Text variant="caption" theme={styling} style={{ 
-                    color: '#94A3B8',
+                    color: aiTheme.colors.textSecondary,
                     fontSize: '0.8rem',
                     display: 'block',
                     marginBottom: '0.25rem'
@@ -248,7 +459,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ profile, styling }) => {
                 <ContactIcon>💼</ContactIcon>
                 <div>
                   <Text variant="caption" theme={styling} style={{ 
-                    color: '#94A3B8',
+                    color: aiTheme.colors.textSecondary,
                     fontSize: '0.8rem',
                     display: 'block',
                     marginBottom: '0.25rem'
@@ -272,7 +483,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ profile, styling }) => {
                 <ContactIcon>🔗</ContactIcon>
                 <div>
                   <Text variant="caption" theme={styling} style={{ 
-                    color: '#94A3B8',
+                    color: aiTheme.colors.textSecondary,
                     fontSize: '0.8rem',
                     display: 'block',
                     marginBottom: '0.25rem'
@@ -293,6 +504,44 @@ const ContactTab: React.FC<ContactTabProps> = ({ profile, styling }) => {
           </ContactCard>
         )}
       </ContactGrid>
+
+      {/* Google Maps Popup */}
+      <AnimatePresence>
+        {showMap && (
+          <MapPopup
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={handleCloseMap}
+          >
+            <MapContainer
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 50 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <MapHeader>
+                <MapTitle>📍 Charlotte, NC, USA</MapTitle>
+                <CloseButton
+                  onClick={handleCloseMap}
+                  aria-label="Close map"
+                  title="Close map"
+                >
+                  ✕
+                </CloseButton>
+              </MapHeader>
+              <MapFrame
+                src={mapUrl}
+                title="Charlotte, NC Location Map"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </MapContainer>
+          </MapPopup>
+        )}
+      </AnimatePresence>
     </TabContainer>
   );
 };
