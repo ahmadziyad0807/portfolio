@@ -198,14 +198,6 @@ export const sampleExtendedProfileData: ExtendedProfileData = {
       technologies: ['React', 'Node.js', 'Python', 'Machine Learning', 'TensorFlow', 'MongoDB', 'Express.js', 'Chart.js', 'Material-UI'],
       link: 'https://github.com/ahmadziyad/PropertyRiskInsight',
       image: '/projects/property-risk-insight.jpg'
-    },
-    {
-      id: 'proj-7',
-      name: 'Property Title Chain',
-      description: 'Blockchain-based Property Title Management - A secure and transparent property title tracking system using blockchain technology. Features immutable title records, ownership verification, transaction history tracking, and smart contract integration for property transfers.',
-      technologies: ['React', 'Node.js', 'Blockchain', 'Ethereum', 'Solidity', 'Web3.js', 'MongoDB', 'Express.js', 'Material-UI'],
-      link: 'https://github.com/ahmadziyad/TitleChain',
-      image: '/projects/property-title-chain.jpg'
     }
   ],
   achievements: [
