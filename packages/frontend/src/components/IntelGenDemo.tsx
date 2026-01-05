@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ChatWidget from './ChatWidget';
-import { ChatbotConfig } from '@intelligenai/shared';
+import { ChatbotConfig } from '../types/chat';
 
 const DemoContainer = styled.div`
   min-height: 100vh;

@@ -11,4 +11,4 @@ export { default as VoiceInterface } from './VoiceInterface';
 export { useSpeech } from './VoiceInterface';
 
 // Re-export types that components might need
-export type { Message, ChatbotConfig, WidgetStyling } from '@intelligenai/shared';
+export type { Message, ChatbotConfig, WidgetStyling } from '../types/chat';

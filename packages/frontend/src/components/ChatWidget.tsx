@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { Message, ChatbotConfig, WidgetStyling } from '@intelligenai/shared';
+import { Message, ChatbotConfig, WidgetStyling } from '../types/chat';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { generateId } from '../utils/helpers';

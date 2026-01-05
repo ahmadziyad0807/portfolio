@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { Message } from '@intelligenai/shared';
+import { Message } from '../types/chat';
 import MessageItem from './MessageItem';
 import TypingIndicator from './TypingIndicator';
 import { useTheme } from '../contexts/ThemeContext';

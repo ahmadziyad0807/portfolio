@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Message } from '@intelligenai/shared';
+import { Message } from '../types/chat';
 import { useTheme } from '../contexts/ThemeContext';
 
 interface MessageItemProps {

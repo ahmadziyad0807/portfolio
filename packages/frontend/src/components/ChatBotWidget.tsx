@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Message } from '@intelligenai/shared';
+import { Message } from '../types/chat';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { generateId } from '../utils/helpers';
