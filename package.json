@@ -27,7 +27,13 @@
     "setup": "npm run docker:up && npm run setup:ollama",
     "setup:ollama": "node -e \"require('child_process').execSync(process.platform === 'win32' ? 'scripts\\\\setup-ollama.bat' : 'bash scripts/setup-ollama.sh', {stdio: 'inherit'})\"",
     "deploy": "npm run build:frontend && vercel --prod",
-    "deploy:preview": "npm run build:frontend && vercel"
+    "deploy:preview": "npm run build:frontend && vercel",
+    "security:audit": "npm audit && npm run security:scan",
+    "security:scan": "npx eslint . --config .eslintrc.security.js --ext .js,.jsx,.ts,.tsx",
+    "security:fix": "npm audit fix",
+    "security:setup": "node -e \"require('child_process').execSync(process.platform === 'win32' ? 'scripts\\\\setup-security.bat' : 'bash scripts/setup-security.sh', {stdio: 'inherit'})\"",
+    "security:emergency": "bash scripts/emergency-security.sh",
+    "security:test": "npm run test --workspace=packages/frontend -- --testPathPattern=security"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
