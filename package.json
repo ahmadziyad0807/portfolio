@@ -33,7 +33,10 @@
     "security:fix": "npm audit fix",
     "security:setup": "node -e \"require('child_process').execSync(process.platform === 'win32' ? 'scripts\\\\setup-security.bat' : 'bash scripts/setup-security.sh', {stdio: 'inherit'})\"",
     "security:emergency": "bash scripts/emergency-security.sh",
-    "security:test": "npm run test --workspace=packages/frontend -- --testPathPattern=security"
+    "security:test": "npm run test --workspace=packages/frontend -- --testPathPattern=security",
+    "security:test-full": "node -e \"require('child_process').execSync(process.platform === 'win32' ? 'scripts\\\\run-security-tests.bat' : 'bash scripts/run-security-tests.sh', {stdio: 'inherit'})\"",
+    "security:attack-scenarios": "npm run test --workspace=packages/frontend -- --testPathPattern=security-attack-scenarios",
+    "security:penetration-test": "npm run test --workspace=packages/frontend -- --testPathPattern=penetration-testing"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
