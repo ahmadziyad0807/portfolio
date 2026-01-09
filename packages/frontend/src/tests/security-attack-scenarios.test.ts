@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 // Mock components for testing
-const MockContactForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => {
+const MockContactForm: React.FC<{ onSubmit: (data: any) => void }> = ({ onSubmit }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -13,17 +13,37 @@ const MockContactForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => {
     onSubmit(data);
   };
 
-  return (
-    <form onSubmit={handleSubmit} data-testid="contact-form">
-      <input name="name" placeholder="Name" data-testid="name-input" />
-      <input name="email" placeholder="Email" data-testid="email-input" />
-      <textarea name="message" placeholder="Message" data-testid="message-input" />
-      <button type="submit" data-testid="submit-button">Submit</button>
-    </form>
-  );
+  return React.createElement('form', {
+    onSubmit: handleSubmit,
+    'data-testid': 'contact-form'
+  }, [
+    React.createElement('input', {
+      key: 'name',
+      name: 'name',
+      placeholder: 'Name',
+      'data-testid': 'name-input'
+    }),
+    React.createElement('input', {
+      key: 'email',
+      name: 'email',
+      placeholder: 'Email',
+      'data-testid': 'email-input'
+    }),
+    React.createElement('textarea', {
+      key: 'message',
+      name: 'message',
+      placeholder: 'Message',
+      'data-testid': 'message-input'
+    }),
+    React.createElement('button', {
+      key: 'submit',
+      type: 'submit',
+      'data-testid': 'submit-button'
+    }, 'Submit')
+  ]);
 };
 
-const MockChatBot = ({ onMessage }: { onMessage: (message: string) => string }) => {
+const MockChatBot: React.FC<{ onMessage: (message: string) => string }> = ({ onMessage }) => {
   const [message, setMessage] = React.useState('');
   const [response, setResponse] = React.useState('');
 
@@ -33,20 +53,29 @@ const MockChatBot = ({ onMessage }: { onMessage: (message: string) => string }) 
     setResponse(botResponse);
   };
 
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input 
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          data-testid="chat-input"
-          placeholder="Type your message..."
-        />
-        <button type="submit" data-testid="chat-submit">Send</button>
-      </form>
-      <div data-testid="chat-response">{response}</div>
-    </div>
-  );
+  return React.createElement('div', {}, [
+    React.createElement('form', {
+      key: 'form',
+      onSubmit: handleSubmit
+    }, [
+      React.createElement('input', {
+        key: 'input',
+        value: message,
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value),
+        'data-testid': 'chat-input',
+        placeholder: 'Type your message...'
+      }),
+      React.createElement('button', {
+        key: 'button',
+        type: 'submit',
+        'data-testid': 'chat-submit'
+      }, 'Send')
+    ]),
+    React.createElement('div', {
+      key: 'response',
+      'data-testid': 'chat-response'
+    }, response)
+  ]);
 };
 
 describe('🚨 Cybersecurity Attack Scenarios', () => {

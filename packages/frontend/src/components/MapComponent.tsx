@@ -178,14 +178,16 @@ const MapComponent: React.FC<MapComponentProps> = ({ location, isVisible, onClos
   const externalMapUrl = generateExternalMapUrl(location);
 
   const handleMapLoad = () => {
+    console.log('MapComponent: Map loaded successfully');
     setIsLoading(false);
     setMapError(false);
   };
 
   const handleMapError = () => {
+    console.error('MapComponent: Map failed to load');
+    console.error('MapComponent: Possible causes - CSP restrictions, network issues, or ad blockers');
     setIsLoading(false);
     setMapError(true);
-    console.warn('Map failed to load, possibly due to CSP restrictions or network issues');
   };
 
   const handleRetry = () => {
@@ -202,11 +204,13 @@ const MapComponent: React.FC<MapComponentProps> = ({ location, isVisible, onClos
 
   useEffect(() => {
     if (isVisible) {
+      console.log('MapComponent: Popup opened, attempting to load map');
+      console.log('MapComponent: Map URL:', mapUrl);
       setIsLoading(true);
       setMapError(false);
       setRetryCount(0);
     }
-  }, [isVisible]);
+  }, [isVisible, mapUrl]);
 
   if (!isVisible) return null;
 

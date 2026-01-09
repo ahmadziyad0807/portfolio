@@ -1,5 +1,4 @@
 // Security utilities for frontend application
-import DOMPurify from 'dompurify';
 
 /**
  * Input validation and sanitization utilities
@@ -10,10 +9,7 @@ export class SecurityUtils {
    * Sanitize HTML content to prevent XSS attacks
    */
   static sanitizeHtml(dirty: string): string {
-    if (typeof window !== 'undefined' && window.DOMPurify) {
-      return window.DOMPurify.sanitize(dirty);
-    }
-    // Fallback for server-side or when DOMPurify is not available
+    // Basic HTML sanitization without external dependencies
     return dirty
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
