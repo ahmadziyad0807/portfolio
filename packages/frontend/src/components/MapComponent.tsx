@@ -152,20 +152,15 @@ const MapComponent: React.FC<MapComponentProps> = ({ location, isVisible, onClos
   const [isLoading, setIsLoading] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
 
-  // Generate Google Maps embed URL
-  const generateMapUrl = (location: string): string => {
-    const encodedLocation = encodeURIComponent(location);
-    return `https://www.google.com/maps/embed/v1/place?key=&q=${encodedLocation}&zoom=12`;
-  };
-
   // Fallback Google Maps URL without API key (uses basic embed)
   const generateFallbackMapUrl = (location: string): string => {
     if (location.toLowerCase().includes('charlotte')) {
-      return "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d208012.13056832216!2d-80.84312995!3d35.227085!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88541fc4fc381a81%3A0x884650e6bf43d164!2sCharlotte%2C%20NC!5e0!3m2!1sen!2sus!4v1640000000000!5m2!1sen!2sus";
+      // Use the most permissive Google Maps embed URL for Charlotte
+      return "https://maps.google.com/maps?width=100%25&height=600&hl=en&q=Charlotte,%20NC,%20USA&t=&z=12&ie=UTF8&iwloc=&output=embed";
     }
-    // Generic fallback
+    // Generic fallback with better compatibility
     const encodedLocation = encodeURIComponent(location);
-    return `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3048.4!2d-77.036!3d38.895!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z${encodedLocation}!5e0!3m2!1sen!2sus!4v1640000000000!5m2!1sen!2sus`;
+    return `https://maps.google.com/maps?width=100%25&height=600&hl=en&q=${encodedLocation}&t=&z=12&ie=UTF8&iwloc=&output=embed`;
   };
 
   // Generate external Google Maps link
@@ -179,13 +174,20 @@ const MapComponent: React.FC<MapComponentProps> = ({ location, isVisible, onClos
 
   const handleMapLoad = () => {
     console.log('MapComponent: Map loaded successfully');
+    console.log('MapComponent: Map URL:', mapUrl);
     setIsLoading(false);
     setMapError(false);
   };
 
   const handleMapError = () => {
     console.error('MapComponent: Map failed to load');
-    console.error('MapComponent: Possible causes - CSP restrictions, network issues, or ad blockers');
+    console.error('MapComponent: Map URL:', mapUrl);
+    console.error('MapComponent: Possible causes:');
+    console.error('  - CSP frame-src restrictions');
+    console.error('  - X-Frame-Options blocking');
+    console.error('  - Network connectivity issues');
+    console.error('  - Ad blockers or browser extensions');
+    console.error('  - Google Maps service unavailable');
     setIsLoading(false);
     setMapError(true);
   };
@@ -257,7 +259,15 @@ const MapComponent: React.FC<MapComponentProps> = ({ location, isVisible, onClos
               <div style={{ fontSize: '0.9rem', marginBottom: '1.5rem', opacity: 0.8 }}>
                 This might be due to security settings, network restrictions, or ad blockers.
                 <br />
-                <strong>Debug:</strong> Check browser console (F12) for detailed error messages.
+                <strong>Debug Info:</strong>
+                <br />
+                • Check browser console (F12) for detailed error messages
+                <br />
+                • Verify CSP headers allow Google Maps domains
+                <br />
+                • Try disabling ad blockers or browser extensions
+                <br />
+                • Ensure stable internet connection
               </div>
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                 {retryCount < 2 && (

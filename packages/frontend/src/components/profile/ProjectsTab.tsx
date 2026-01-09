@@ -318,15 +318,16 @@ const ProjectsTab: React.FC<ProjectsTabProps> = ({ profile, styling }) => {
               theme={styling}
             />
             <Flex direction="column" gap="0.75rem" theme={styling}>
-              <Flex justify="space-between" align="flex-start" theme={styling}>
+              <div>
                 <Heading level={3} theme={styling} style={{
                   color: aiTheme.colors.text,
                   fontSize: '1.2rem',
-                  flex: 1
+                  marginBottom: '0.75rem',
+                  lineHeight: '1.3'
                 }}>
                   {project.name}
                 </Heading>
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
                   {project.demoLink && (
                     <ProjectLink
                       href={project.demoLink}
@@ -362,7 +363,7 @@ const ProjectsTab: React.FC<ProjectsTabProps> = ({ profile, styling }) => {
                     )
                   )}
                 </div>
-              </Flex>
+              </div>
               <Text variant="body" theme={styling} style={{
                 color: aiTheme.colors.textSecondary,
                 lineHeight: '1.6'

@@ -27,85 +27,89 @@ This error occurred because the Content Security Policy (CSP) headers implemente
 
 **File**: `packages/frontend/vercel.json`
 
-**Before**:
+**Final CSP Configuration**:
 ```json
 {
   "key": "Content-Security-Policy",
-  "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none';"
-}
-```
-
-**After**:
-```json
-{
-  "key": "Content-Security-Policy",
-  "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: *.googleapis.com *.gstatic.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https: *.googleapis.com; frame-src 'self' https://www.google.com https://maps.google.com; frame-ancestors 'none';"
+  "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com https://maps.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://maps.googleapis.com; img-src 'self' data: https: *.googleapis.com *.gstatic.com *.google.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https: *.googleapis.com *.google.com; frame-src https://www.google.com https://maps.google.com https://google.com; child-src https://www.google.com https://maps.google.com https://google.com; frame-ancestors 'self';"
 }
 ```
 
 **Key Changes**:
-- Added `https://maps.googleapis.com https://maps.gstatic.com` to `script-src`
-- Added `*.googleapis.com *.gstatic.com` to `img-src`
-- Added `frame-src 'self' https://www.google.com https://maps.google.com`
-- Added `*.googleapis.com` to `connect-src`
+- Added `https://maps.google.com` to `script-src`
+- Added `https://maps.googleapis.com` to `style-src`
+- Added `*.google.com` to `img-src`
+- Added `*.google.com` to `connect-src`
+- Added `https://google.com` to `frame-src` and `child-src`
+- Changed `frame-ancestors` from `'none'` to `'self'`
+- Removed conflicting `Content-Security-Policy-Report-Only` header
 
-### 2. Updated Permissions Policy
+### 2. Added X-Frame-Options Header
 
-**Before**:
+**New Header**:
 ```json
 {
-  "key": "Permissions-Policy",
-  "value": "camera=(), microphone=(), geolocation=(), payment=()"
+  "key": "X-Frame-Options",
+  "value": "SAMEORIGIN"
 }
 ```
 
-**After**:
+This allows the page to be framed by same-origin requests, which is necessary for Google Maps embeds.
+
+### 3. Updated Permissions Policy
+
+**Updated Policy**:
 ```json
 {
   "key": "Permissions-Policy",
-  "value": "camera=(), microphone=(), geolocation=(self), payment=()"
+  "value": "camera=(), microphone=(), geolocation=(self), payment=(), fullscreen=(self)"
 }
 ```
 
 **Key Changes**:
-- Changed `geolocation=()` to `geolocation=(self)` to allow geolocation for the current origin
+- Added `fullscreen=(self)` for better map interaction
+- Maintained `geolocation=(self)` for location services
 
-### 3. Created Robust MapComponent
+### 4. Enhanced MapComponent
 
 **File**: `packages/frontend/src/components/MapComponent.tsx`
 
 **Features**:
-- **Error Handling**: Gracefully handles CSP blocking and network issues
-- **Fallback Options**: Provides external Google Maps link when iframe fails
-- **Loading States**: Shows loading spinner and error messages
-- **Retry Mechanism**: Allows users to retry loading the map
+- **Improved URL Generation**: Uses more compatible Google Maps embed URLs
+- **Enhanced Error Handling**: Detailed debugging information and multiple fallback options
+- **Loading States**: Shows loading spinner and comprehensive error messages
+- **Retry Mechanism**: Allows users to retry loading the map (up to 2 attempts)
 - **Accessibility**: Proper ARIA labels and keyboard navigation
 - **Security**: Uses secure referrer policy and loading attributes
 
-**Key Components**:
+**URL Generation Strategy**:
 ```typescript
-interface MapComponentProps {
-  location: string;
-  isVisible: boolean;
-  onClose: () => void;
-}
+const generateFallbackMapUrl = (location: string): string => {
+  if (location.toLowerCase().includes('charlotte')) {
+    return "https://maps.google.com/maps?width=100%25&height=600&hl=en&q=Charlotte,%20NC,%20USA&t=&z=12&ie=UTF8&iwloc=&output=embed";
+  }
+  const encodedLocation = encodeURIComponent(location);
+  return `https://maps.google.com/maps?width=100%25&height=600&hl=en&q=${encodedLocation}&t=&z=12&ie=UTF8&iwloc=&output=embed`;
+};
 ```
 
 **Error Handling Flow**:
-1. Attempt to load Google Maps iframe
-2. If blocked by CSP or network issues, show error message
+1. Attempt to load Google Maps iframe with optimized URL
+2. If blocked by CSP or network issues, show detailed error message with debugging info
 3. Provide retry button (up to 2 attempts)
 4. Offer external Google Maps link as fallback
+5. Log comprehensive debugging information to browser console
 
-### 4. Updated ContactTab Integration
+### 5. Updated ContactTab Integration
 
 **File**: `packages/frontend/src/components/profile/ContactTab.tsx`
 
 **Changes**:
-- Replaced inline map popup with `MapComponent`
-- Removed hardcoded map URL
-- Added proper error handling
-- Improved user experience with loading states
+- Integrated with enhanced `MapComponent`
+- Removed inline map popup implementation
+- Added proper error handling and loading states
+- Improved user experience with AnimatePresence for smooth transitions
+- Maintained glass morphism theme consistency
 
 ## Security Considerations
 
