@@ -255,12 +255,14 @@ const MapComponent: React.FC<MapComponentProps> = ({ location, isVisible, onClos
                 Map temporarily unavailable
               </div>
               <div style={{ fontSize: '0.9rem', marginBottom: '1.5rem', opacity: 0.8 }}>
-                This might be due to security settings or network restrictions.
+                This might be due to security settings, network restrictions, or ad blockers.
+                <br />
+                <strong>Debug:</strong> Check browser console (F12) for detailed error messages.
               </div>
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                 {retryCount < 2 && (
                   <RetryButton onClick={handleRetry}>
-                    🔄 Try Again
+                    🔄 Try Again ({retryCount + 1}/3)
                   </RetryButton>
                 )}
                 <ExternalLinkButton
