@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ExtendedProfileData, ProfileStyling } from '../../types/profile';
 import { Heading, Text } from '../../styles/styled';
 import aiTheme from '../../styles/aiTheme';
+import MapComponent from '../MapComponent';
 
 interface ContactTabProps {
   profile: ExtendedProfileData;
@@ -299,9 +300,6 @@ const ContactTab: React.FC<ContactTabProps> = ({ profile, styling }) => {
   const hasContactInfo = profile.contact?.email || profile.contact?.phone || profile.contact?.location;
   const hasSocialInfo = profile.social?.website || profile.social?.linkedin || profile.social?.github;
 
-  // Google Maps embed URL for Charlotte, NC, USA
-  const mapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d208012.13056832216!2d-80.84312995!3d35.227085!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88541fc4fc381a81%3A0x884650e6bf43d164!2sCharlotte%2C%20NC!5e0!3m2!1sen!2sus!4v1640000000000!5m2!1sen!2sus";
-
   const handleMapClick = () => {
     setShowMap(true);
   };
@@ -505,42 +503,13 @@ const ContactTab: React.FC<ContactTabProps> = ({ profile, styling }) => {
         )}
       </ContactGrid>
 
-      {/* Google Maps Popup */}
+      {/* Google Maps Component */}
       <AnimatePresence>
-        {showMap && (
-          <MapPopup
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            onClick={handleCloseMap}
-          >
-            <MapContainer
-              initial={{ opacity: 0, scale: 0.8, y: 50 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8, y: 50 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <MapHeader>
-                <MapTitle>📍 Charlotte, NC, USA</MapTitle>
-                <CloseButton
-                  onClick={handleCloseMap}
-                  aria-label="Close map"
-                  title="Close map"
-                >
-                  ✕
-                </CloseButton>
-              </MapHeader>
-              <MapFrame
-                src={mapUrl}
-                title="Charlotte, NC Location Map"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </MapContainer>
-          </MapPopup>
-        )}
+        <MapComponent
+          location={profile.contact?.location || 'Charlotte, NC, USA'}
+          isVisible={showMap}
+          onClose={handleCloseMap}
+        />
       </AnimatePresence>
     </TabContainer>
   );
